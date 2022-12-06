@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "name": "adventofcode",
+  "devDependencies": {},
+  "workspaces": [
+    "years/*"
+  ]
+}
