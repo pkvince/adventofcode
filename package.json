@@ -3,6 +3,6 @@
   "name": "adventofcode",
   "devDependencies": {},
   "workspaces": [
-    "years/*"
+    "20*"
   ]
 }
