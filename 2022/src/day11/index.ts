@@ -5,7 +5,7 @@ type Monkey = {
   items: number[];
   op: (worryLevel: number) => number;
   passTo: (item: number) => number;
-  passToAndDivide: (item: number) => {passTo: number; item: number};
+  checksIfDivisibleBy: number;
 };
 
 const Operations = {
@@ -29,16 +29,12 @@ const parseInput = (rawInput: string): Monkey[] =>
         operationParts[2] === 'old' ? worryLevel : parseInt(operationParts[2]),
       );
 
-    const divisibleBy = parseInt((lines[3].match(/(\d+)/) ?? impossible())[1]);
+    const checksIfDivisibleBy = parseInt((lines[3].match(/(\d+)/) ?? impossible())[1]);
     const trueDest = parseInt((lines[4].match(/(\d+)/) ?? impossible())[1]);
     const falseDest = parseInt((lines[5].match(/(\d+)/) ?? impossible())[1]);
-    const passTo = (item: number) => (item % divisibleBy === 0 ? trueDest : falseDest);
-    const passToAndDivide = (item: number) =>
-      item % divisibleBy === 0
-        ? {passTo: trueDest, item: item / divisibleBy}
-        : {passTo: falseDest, item};
+    const passTo = (item: number) => (item % checksIfDivisibleBy === 0 ? trueDest : falseDest);
 
-    return {items, op, passTo, passToAndDivide};
+    return {items, op, passTo, checksIfDivisibleBy};
   });
 
 const part1 = (rawInput: string) => {
@@ -49,18 +45,15 @@ const part1 = (rawInput: string) => {
     for (let m = 0; m < monkeys.length; m++) {
       while (monkeys[m].items.length) {
         let item = monkeys[m].items.shift() ?? impossible();
-        console.log(`Monkey ${m} inspecting item ${item}`);
         inspectionsByMonkey[m]++;
         item = monkeys[m].op(item);
         item = Math.floor(item / 3);
         const passTo = monkeys[m].passTo(item);
-        console.log('Passing item', item, 'to monkey', passTo);
         monkeys[passTo].items.push(item);
       }
     }
   });
 
-  console.log(inspectionsByMonkey.sort((a, b) => b - a).slice(0, 2));
   const topTwoMostActiveMonkeys = inspectionsByMonkey.sort((a, b) => b - a);
 
   return topTwoMostActiveMonkeys[0] * topTwoMostActiveMonkeys[1];
@@ -69,22 +62,23 @@ const part1 = (rawInput: string) => {
 const part2 = (rawInput: string) => {
   const monkeys = parseInput(rawInput);
 
+  const worryLevelModulo = monkeys.reduce((acc, monkey) => {
+    return acc * monkey.checksIfDivisibleBy;
+  }, 1);
+
   const inspectionsByMonkey = Array.from({length: monkeys.length}, () => 0);
   Array.from({length: 10000}, () => {
     for (let m = 0; m < monkeys.length; m++) {
       while (monkeys[m].items.length) {
         let item = monkeys[m].items.shift() ?? impossible();
-        console.log(`Monkey ${m} inspecting item ${item}`);
         inspectionsByMonkey[m]++;
-        item = monkeys[m].op(item);
-        const passToAndDivide = monkeys[m].passToAndDivide(item);
-        console.log('Passing item', passToAndDivide.item, 'to monkey', passToAndDivide.passTo);
-        monkeys[passToAndDivide.passTo].items.push(passToAndDivide.item);
+        item = monkeys[m].op(item) % worryLevelModulo;
+        const passTo = monkeys[m].passTo(item);
+        monkeys[passTo].items.push(item);
       }
     }
   });
 
-  console.log(inspectionsByMonkey.sort((a, b) => b - a).slice(0, 2));
   const topTwoMostActiveMonkeys = inspectionsByMonkey.sort((a, b) => b - a);
 
   return topTwoMostActiveMonkeys[0] * topTwoMostActiveMonkeys[1];
@@ -140,5 +134,5 @@ run({
     solution: part2,
   },
   trimTestInputs: true,
-  onlyTests: true,
+  onlyTests: false,
 });
