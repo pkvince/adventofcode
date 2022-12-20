@@ -15,14 +15,14 @@
   "author": "Vincent Martel",
   "license": "ISC",
   "devDependencies": {
+    "@types/lodash": "4.14.191",
     "@types/node": "^16.11.6",
     "aocrunner": "^1.9.1",
-    "prettier": "^2.8.0",
-    "@types/lodash": "4.14.191"
+    "lodash": "^4.17.21",
+    "lru-cache": "^7.14.1",
+    "prettier": "^2.8.0"
   },
-  "dependencies": {
-    "lodash": "4.17.21"
-  },
+  "dependencies": {},
   "engines": {
     "node": ">=16.13.0"
   }
