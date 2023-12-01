@@ -302,10 +302,10 @@
     },
     {
       "part1": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "331120084396440",
         "attempts": [],
-        "time": null
+        "time": 243.060333
       },
       "part2": {
         "solved": false,
@@ -358,10 +358,10 @@
     },
     {
       "part1": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "2-=12=2-2-2-=0012==2",
         "attempts": [],
-        "time": null
+        "time": 0.296208
       },
       "part2": {
         "solved": false,
