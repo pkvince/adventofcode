@@ -1,37 +1,32 @@
 import run from 'aocrunner';
 
-const parseInput = (rawInput: string) => rawInput.replace(/  +/g, ' ').split('\n');
+const parseInput = (rawInput: string) =>
+  rawInput
+    .replace(/  +/g, ' ')
+    .split('\n')
+    .map((row) => row.split(': ')[1].trim());
 
-const intersectLength = (a: string[], b: string[]) => {
-  var setA = new Set(a);
-  var setB = new Set(b);
-  var intersection = new Set([...setA].filter((x) => setB.has(x)));
-  return intersection.size;
+const checkCardPoints = (card: string): number => {
+  const winningNumbers = new Set(card.split(' | ')[0].split(' '));
+  const myNumbers = new Set(card.split(' | ')[1].split(' '));
+  return new Set([...myNumbers].filter((x) => winningNumbers.has(x))).size;
 };
 
 const part1 = (rawInput: string) => {
-  const input = parseInput(rawInput);
-
-  const cards = input.map((row) => row.split(': ')[1].trim());
+  const cards = parseInput(rawInput);
 
   let sum = 0;
   for (const card of cards) {
-    const winningNumbers = new Set(card.split(' | ')[0].split(' '));
-    const myNumbers = new Set(card.split(' | ')[1].split(' '));
-    const count = new Set([...myNumbers].filter((x) => winningNumbers.has(x))).size;
+    const points = checkCardPoints(card);
 
-    if (count === 0) continue;
-
-    sum = sum + Math.pow(2, count - 1);
+    sum = sum + (points > 0 ? Math.pow(2, points - 1) : 0);
   }
 
   return sum;
 };
 
 const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
-
-  const cards = input.map((row) => row.split(': ')[1].trim());
+  const cards = parseInput(rawInput);
 
   const cardCopies: Record<number, number> = cards.reduce((acc, curr, index) => {
     return {
@@ -51,9 +46,7 @@ const part2 = (rawInput: string) => {
       let points = cardPointsCache[index + 1] ?? null;
 
       if (points === null) {
-        const winningNumbers = new Set(card.split(' | ')[0].split(' '));
-        const myNumbers = new Set(card.split(' | ')[1].split(' '));
-        points = new Set([...myNumbers].filter((x) => winningNumbers.has(x))).size;
+        points = checkCardPoints(card);
         cardPointsCache[index + 1] = points;
       }
 
