@@ -23,6 +23,9 @@
     "prettier": "^2.8.0"
   },
   "dependencies": {
+    "chalk": "^5.3.0",
+    "heap-js": "^2.3.0",
+    "mathjs": "^12.2.0",
     "numjs": "^0.16.1"
   },
   "engines": {

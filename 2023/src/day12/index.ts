@@ -13,18 +13,20 @@ const parseInput = (rawInput: string) =>
 
 let cache: Record<string, number> = {};
 let tableRows: any[] = [];
+let debug: boolean;
 
 const countArrangements = (
   map: string,
   groups: number[],
   i: number, // Map iterator
-  n: number, // Number of possible combos
-  g: number = 0, // Group iterator
+  n: number, // Group iterator
+  g: number = 0, // Number of possible combos
 ): number => {
   const cacheKey = `${i}-${n}-${g}`;
 
-  tableRows.push({cacheKey: cacheKey, map: map.slice(i), group: groups.slice(n), g: g});
-  // console.log({cacheKey: cacheKey, map: map.slice(i), group: groups.slice(n), g: g});
+  if (debug) {
+    tableRows.push({cacheKey: cacheKey, map: map.slice(i), group: groups.slice(n), g: g});
+  }
 
   // Do not recompute
   if (cache.hasOwnProperty(cacheKey)) {
@@ -64,40 +66,49 @@ const countArrangements = (
 
   // Cache result and return it
   cache[cacheKey] = g;
-  tableRows = tableRows.map((row) => ({...row, g: cache[row.cacheKey]}));
+  if (debug) tableRows = tableRows.map((row) => ({...row, g: cache[row.cacheKey]}));
   return g;
 };
 
 const part1 = (rawInput: string) => {
   const input = parseInput(rawInput);
+  debug = input.length === 6;
 
   let arrangementsCount = 0;
-
-  input.forEach((row, i) => {
+  for (const row of input) {
     cache = {};
-    arrangementsCount += countArrangements(row.map, row.groups, 0, 0, 0);
-    console.table(tableRows);
     tableRows = [];
-  });
+
+    arrangementsCount += countArrangements(row.map, row.groups, 0, 0, 0);
+
+    if (debug) {
+      console.table(tableRows);
+      console.table(cache);
+    }
+  }
 
   return arrangementsCount;
 };
 
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
+  debug = input.length === 6;
 
   let arrangementsCount = 0;
-
-  input.forEach((row, i) => {
+  for (const row of input) {
     cache = {};
+    tableRows = [];
 
     const map = [row.map, row.map, row.map, row.map, row.map].join('?');
     const groups = [row.groups, row.groups, row.groups, row.groups, row.groups].flat();
 
     arrangementsCount += countArrangements(map, groups, 0, 0, 0);
-    // console.table(tableRows);
-    // tableRows = [];
-  });
+
+    if (debug) {
+      console.table(tableRows);
+      console.table(cache);
+    }
+  }
 
   return arrangementsCount;
 };
@@ -136,5 +147,5 @@ run({
     solution: part2,
   },
   trimTestInputs: true,
-  onlyTests: true,
+  onlyTests: false,
 });
