@@ -7,27 +7,21 @@ const parseInput = (rawInput: string): number[][] =>
 
 enum Direction {
   Up = '^',
-  Down = 'v',
   Right = '>',
+  Down = 'v',
   Left = '<',
 }
-type Position = [number, number, Direction];
-type Block = [number, number, Direction];
-type Previous = Step | null;
 type Heuristic = number;
-type HeatLoss = number;
-type NSteps = number;
+type Block = [number, number, Direction];
+type AccHeatLoss = number;
+type NStepsInDirection = number;
+type PrevStep = Step | null;
 
-type Step = [Heuristic, Block, HeatLoss, NSteps, Previous];
+type Step = [Heuristic, Block, AccHeatLoss, NStepsInDirection, PrevStep];
 
-const getNextPossibleBlocks: Record<Direction, (x: number, y: number) => Position[]> = {
+const getNextPossibleBlocks: Record<Direction, (x: number, y: number) => Block[]> = {
   [Direction.Up]: (x, y) => [
     [x, y - 1, Direction.Up],
-    [x + 1, y, Direction.Right],
-    [x - 1, y, Direction.Left],
-  ],
-  [Direction.Down]: (x, y) => [
-    [x, y + 1, Direction.Down],
     [x + 1, y, Direction.Right],
     [x - 1, y, Direction.Left],
   ],
@@ -35,6 +29,11 @@ const getNextPossibleBlocks: Record<Direction, (x: number, y: number) => Positio
     [x, y + 1, Direction.Down],
     [x, y - 1, Direction.Up],
     [x + 1, y, Direction.Right],
+  ],
+  [Direction.Down]: (x, y) => [
+    [x, y + 1, Direction.Down],
+    [x + 1, y, Direction.Right],
+    [x - 1, y, Direction.Left],
   ],
   [Direction.Left]: (x, y) => [
     [x, y + 1, Direction.Down],
@@ -68,6 +67,7 @@ const part1 = (input: string) => {
   const endX = city[0].length - 1;
   const endY = city.length - 1;
 
+  // This will always be sorted by the heuristic, which is a combination of manhattan distance to end and accHeatLoss
   const openPriorityQueue = new Heap<Step>(([hA], [hB]) => hA - hB);
   openPriorityQueue.push([0, [startX, startY, Direction.Right], 0, 0, null]);
   openPriorityQueue.push([0, [startX, startY, Direction.Down], 0, 0, null]);
@@ -76,8 +76,8 @@ const part1 = (input: string) => {
 
   while (openPriorityQueue.size() >= 0) {
     const current = openPriorityQueue.pop()!;
-    const [, [x, y, direction], accHeatLoss, nSteps] = current;
-    if (x === endX && y === endY && nSteps) {
+    const [, [x, y, direction], accHeatLoss, nStepsInDirection] = current;
+    if (x === endX && y === endY && nStepsInDirection) {
       console.log('Done!');
 
       printPathOnGrid(current, city);
@@ -86,13 +86,13 @@ const part1 = (input: string) => {
     }
 
     const nextPossibleBlocks = getNextPossibleBlocks[direction](x, y)
-      .filter(([, , newDirection]) => (nSteps > 2 ? newDirection !== direction : true))
+      .filter(([, , newDirection]) => (nStepsInDirection > 2 ? newDirection !== direction : true))
       .filter(([x, y]) => !(x < 0 || y < 0 || y > endY || x > endX));
 
     for (const nextBlock of nextPossibleBlocks) {
       const [nextX, nextY, nextDirection] = nextBlock;
       const nextAccHeatLoss = accHeatLoss + city[nextY][nextX];
-      const nextNSteps = nextDirection === direction ? nSteps + 1 : 1;
+      const nextNSteps = nextDirection === direction ? nStepsInDirection + 1 : 1;
       const distanceToEnd = endX - nextX + endY - nextY; // Manhattan distance to end
       const nextHeuristic = nextAccHeatLoss + distanceToEnd;
 
