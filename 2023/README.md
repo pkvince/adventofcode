@@ -1,11 +1,11 @@
 <!-- Entries between SOLUTIONS and RESULTS tags are auto-generated -->
 
-[![AoC](https://badgen.net/badge/AoC/2022/blue)](https://adventofcode.com/2022)
+[![AoC](https://badgen.net/badge/AoC/2023/blue)](https://adventofcode.com/2023)
 [![Node](https://badgen.net/badge/Node/v16.13.0+/blue)](https://nodejs.org/en/download/)
 ![Language](https://badgen.net/badge/Language/TypeScript/blue)
 [![Template](https://badgen.net/badge/Template/aocrunner/blue)](https://github.com/caderek/aocrunner)
 
-# 🎄 Advent of Code 2022 🎄
+# 🎄 Advent of Code 2023 🎄
 
 ## Solutions
 
@@ -31,7 +31,7 @@
 [![Day](https://badgen.net/badge/18/%E2%98%85%E2%98%85/green)](src/day18)
 [![Day](https://badgen.net/badge/19/%E2%98%85%E2%98%85/green)](src/day19)
 [![Day](https://badgen.net/badge/20/%E2%98%85%E2%98%85/green)](src/day20)
-![Day](https://badgen.net/badge/21/%E2%98%86%E2%98%86/gray)
+[![Day](https://badgen.net/badge/21/%E2%98%85%E2%98%86/yellow)](src/day21)
 ![Day](https://badgen.net/badge/22/%E2%98%86%E2%98%86/gray)
 ![Day](https://badgen.net/badge/23/%E2%98%86%E2%98%86/gray)
 ![Day](https://badgen.net/badge/24/%E2%98%86%E2%98%86/gray)
@@ -202,16 +202,16 @@ Both parts: 79.668ms
 
 ```
 Day 20
-Time part 1: 23.609ms
-Time part 2: 48.682ms
-Both parts: 72.291ms
+Time part 1: 22.641ms
+Time part 2: 46.618ms
+Both parts: 69.259ms
 ```
 
 ```
 Day 21
-Time part 1: -
+Time part 1: 128.289ms
 Time part 2: -
-Both parts: -
+Both parts: 128.289ms
 ```
 
 ```
@@ -243,8 +243,8 @@ Both parts: -
 ```
 
 ```
-Total stars: 40/50
-Total time: 6617.095ms
+Total stars: 41/50
+Total time: 6742.352ms
 ```
 
 <!--/RESULTS-->
